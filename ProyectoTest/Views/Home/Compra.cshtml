@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewBag.Title = "Ventas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ol class="breadcrumb mb-4 mt-4">
+    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Inicio</a></li>
+    <li class="breadcrumb-item active">Compras</li>
+</ol>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i> Listado de Ventas
+    </div>
+    <div class="card-body">
+
+        <hr />
+        <table id="tabla" class="display responsive" style="width:100%">
+            <thead>
+                <tr>
+                    <th>N° Compra</th>
+                    <th>Total Productos</th>
+                    <th>Total $</th>
+                    <th>Fecha</th>
+                    <th>Usuario</th>
+                    @*<th></th>*@
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+@section scripts{
+
+    <script>
+        var tabladata;
+        $(document).ready(function () {
+
+            tabladata = $('#tabla').DataTable({
+                    responsive:true,
+                    "ajax": {
+                        "url": '@Url.Action("ListarCompra", "Home")',
+                        "type": "GET",
+                        "datatype": "json"
+                    },
+                    "columns": [
+                        { "data": "IdCompra" },
+                        { "data": "TotalProducto" },
+                        { "data": "Total" },
+                        { "data": "FechaTexto" },
+                        { "data": "usuario" }
+                    ],      
+            });  
+        });
+
+
+
+    $.fn.inputFilter = function (inputFilter) {
+        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+            if (inputFilter(this.value)) {
+                this.oldValue = this.value;
+                this.oldSelectionStart = this.selectionStart;
+                this.oldSelectionEnd = this.selectionEnd;
+            } else if (this.hasOwnProperty("oldValue")) {
+                this.value = this.oldValue;
+                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+            } else {
+                this.value = "";
+            }
+        });
+    };
+
+    $("#txtstock").inputFilter(function (value) {
+        return /^-?\d*$/.test(value);
+    });
+
+    $("#txtprecio").inputFilter(function (value) {
+        return /^-?\d*[.]?\d{0,2}$/.test(value);
+    });
+
+
+    </script>
+
+}
+
+

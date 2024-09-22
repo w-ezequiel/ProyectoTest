@@ -15,19 +15,13 @@
                         <h4 class="text-center">Total Productos</h4>
                         <h4 id="total-productos" class="text-center"></h4>
                     </div>
-                    @*<div class="icon">
-                        <i class="fab fa-product-hunt"></i>
-                    </div>*@
-                    @*<div>Total Productos</div>
-        <div id="total-productos"></div>*@
                 </div>
-               
+
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
-                @*<a class="small text-white stretched-link" href="@Url.Action("Producto","Home")">Ver Detalles</a>*@
                 <a class="small text-white stretched-link" href="@Url.Action("Producto","Home")">Ver Detalles</a>
                 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-               
+
             </div>
         </div>
     </div>
@@ -48,11 +42,41 @@
         </div>
     </div>
 
+    @* ------------------------------total ventas---------------------------------------------- *@
+    <div class="col-4 text-center">
+        <div class="card bg-secondary text-white mb-4 text-center">
+            <div class="card-body text-center">
+                <div class="d-flex justify-content-center text-center">
+                    <div class=" text-center">
+                        <h4 class="text-center">Total Ventas</h4>
+                        <h4 id="total-compras" class="text-center"></h4>
+                    </div>
+                </div>
 
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" href="@Url.Action("Compra","Home")">Ver Detalles</a>
+                @*<a class="small text-white stretched-link" href="">Ver Detalles</a>*@
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
 
-
-
+            </div>
+        </div>
+    </div>
 </div>
+<br />
+<div class="row text-center align-items-center">
+    <divc class="col-1"><br /></divc>
+    <div class="col-10 align-items-center">
+        <div class="panel panel-default align-items-center">
+            <div class="panel-heading align-items-center"><h5>Reporte de Productos Vendidos por Mes</h5> </div>
+            <div class="panel-body align-items-center">
+                <canvas id="myBarChart" class="align-items-center""></canvas>
+            </div>
+        </div>
+    </div>
+    <divc class="col-1"><br /></divc>
+</div>
+
 @section scripts{
 
     <script>
@@ -77,45 +101,165 @@
                 },
             });
 
+
              jQuery.ajax({
-                url: '@Url.Action("ListarMarca", "Home")',
+     url: '@Url.Action("ListarCompra", "Home")',
+     type: "GET",
+     data: null,
+     dataType: "json",
+     contentType: "application/json; charset=utf-8",
+     success: function (data) {
+
+         if (data.data != null) {
+             $("#total-compras").text(data.data.length);
+         }
+     },
+     error: function (error) {
+         console.log(error)
+     },
+     beforeSend: function () {
+
+     },
+ });
+
+
+            jQuery.ajax({
+                url: '@Url.Action("GraficoCompra", "Home")',
                 type: "GET",
-                data: null,
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
-                    if (data.data != null) {
-                        $("#total-marcas").text(data.data.length);
+
+                    /*console.log(data);*/
+
+                    var arrayMeses = [];
+                    var arrayCantidad = [];
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        /*console.log(data[i].mes)*/
+                        arrayMeses.push(data[i].Fecha)
+                        arrayCantidad.push(data[i].Total)
                     }
+
+                    console.log(arrayMeses)
+                    console.log(arrayCantidad)
+
+                    var controlBar1 = document.getElementById("myBarChart");
+
+                    var graficoBar1 = new Chart(controlBar1, {
+                        type: 'bar',
+                        data: {
+                            labels: arrayMeses,
+                            datasets: [{
+                                label: "Productos Vendidos",
+                                data: arrayCantidad,
+                                fill: true,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                   
+                                    'rgba(255, 205, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(201, 203, 207, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgb(255, 99, 132)',
+                                   
+                                    'rgb(255, 205, 86)',
+                                    'rgb(75, 192, 192)',
+                                    'rgb(54, 162, 235)',
+                                    'rgb(153, 102, 255)',
+                                    'rgb(201, 203, 207)'
+                                ],
+                                borderWidth: 2
+                                /*backgroundColor: "#0800B1",*/
+                                
+                            }],
+                        },
+                        options: {
+                            responsive: true,
+                           
+                        }
+                    });
+
+
                 },
                 error: function (error) {
                     console.log(error)
-                },
-                beforeSend: function () {
-
-                },
-            });
-
-             jQuery.ajax({
-                url: '@Url.Action("ListarCategoria", "Home")',
-                type: "GET",
-                data: null,
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (data) {
-                    if (data.data != null) {
-                        $("#total-categorias").text(data.data.length);
-                    }
-                },
-                error: function (error) {
-                    console.log(error)
-                },
-                beforeSend: function () {
-
-                },
-            });
+                }
+        });
 
         })
     </script>
 
 }
+@*
+
+        jQuery.ajax({
+            url: '@Url.Action("GraficoCompra", "Home")',
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+                /*console.log(data);*/
+
+                var arrayMeses = [];
+                var arrayCantidad = [];
+
+                for (var i = 0; i < data.length; i++) {
+
+                    /*console.log(data[i].mes)*/
+                    arrayMeses.push(data[i].Fecha)
+                    arrayCantidad.push(data[i].Total)
+                }
+
+                console.log(arrayMeses)
+                console.log(arrayCantidad)
+
+                var controlBar1 = document.getElementById("myBarChart");
+
+                var graficoBar1 = new Chart(controlBar1, {
+                    type: 'line',
+                    data: {
+                        labels: arrayMeses,
+                        datasets: [{
+                            label: "Productos Vendidos",
+                            /*backgroundColor: "#0800B1",*/
+                            backgroundColor: ["#03B100", "#0083B1", "#0800B1"],
+                            borderColor: "#000000",
+                            borderWidth: 0,
+                            data: arrayCantidad,
+                        }],
+                    },
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                gridLines: {
+                                    display: true
+                                },
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                },
+                                gridLines: {
+                                    display: true
+                                }
+                            }],
+                        },
+                        legend: {
+                            display: true
+                        }
+                    }
+                });
+
+
+            },
+            error: function (error) {
+                console.log(error)
+            }
+    });
+*@

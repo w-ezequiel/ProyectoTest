@@ -5,7 +5,7 @@
 }
 
 <ol class="breadcrumb mb-4 mt-4">
-    <li class="breadcrumb-item"><a href="index.html">Inicio</a></li>
+    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Inicio</a></li>
     <li class="breadcrumb-item active">Productos</li>
 </ol>
 
@@ -173,49 +173,10 @@
                         }
 
                     ],
-                    "language": {
-                        "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
-                    }
+                    
             });
 
-            jQuery.ajax({
-                url: '@Url.Action("ListarCategoria", "Home")',
-                type: "GET",
-                data: null,
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (data) {
-                    $.each(data.data, function (index, value) {
-                        $("<option>").attr({ "value": value.IdCategoria }).text(value.Descripcion).appendTo("#cbocategoria");
-                    });
-                },
-                error: function (error) {
-                    console.log(error)
-                },
-                beforeSend: function () {
-
-                },
-            });
-
-            jQuery.ajax({
-                url: '@Url.Action("ListarMarca", "Home")',
-                type: "GET",
-                data: null,
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (data) {
-                    $.each(data.data, function (index, value) {
-                        $("<option>").attr({ "value": value.IdMarca }).text(value.Descripcion).appendTo("#cbomarca");
-                    });
-                },
-                error: function (error) {
-                    console.log(error)
-                },
-                beforeSend: function () {
-
-                },
-            });
-
+           
         });
 
 

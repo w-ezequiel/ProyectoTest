@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -28,6 +29,77 @@ namespace ProyectoTest.Logica
                 }
 
                 return _instancia;
+            }
+        }
+
+        public List<graficaCompra> grafVentas()
+        {
+            List<graficaCompra> objLista = new List<graficaCompra>();
+            using (SqlConnection oConexion = new SqlConnection(Conexion.CN))
+            {
+                SqlCommand cmd = new SqlCommand("sp_graficacompra", oConexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                try
+                {
+                    oConexion.Open();
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        objLista.Add(new graficaCompra()
+                        {
+                            Fecha = dr["Mes"].ToString(),
+                            Total = Convert.ToInt32(dr["Total"].ToString())
+                        });
+                    }
+                    dr.Close();
+
+                    return objLista;
+
+                }
+                catch (Exception)
+                {
+
+                    objLista = null;
+                    return objLista;
+                }
+               
+            }
+        }
+
+        public List<listarCompra> Listar()
+        {
+            List<listarCompra> rptListaCompra = new List<listarCompra>();
+            using (SqlConnection oConexion = new SqlConnection(Conexion.CN))
+            {
+                SqlCommand cmd = new SqlCommand("sp_listacompra", oConexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                try
+                {
+                    oConexion.Open();
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+                        rptListaCompra.Add(new listarCompra()
+                        {
+                            IdCompra = Convert.ToInt32(dr["IdCompra"].ToString()),
+                            TotalProducto = Convert.ToInt32(dr["TotalProducto"].ToString()),
+                            Total = Convert.ToDecimal(dr["Total"].ToString(), new CultureInfo("en-US")),
+                            FechaTexto = dr["FechaCompra"].ToString(),
+                            usuario = dr["Correo"].ToString()
+                        });
+                    }
+                    dr.Close();
+
+                    return rptListaCompra;
+
+                }
+                catch (Exception ex)
+                {
+                    rptListaCompra = null;
+                    return rptListaCompra;
+                }
             }
         }
 

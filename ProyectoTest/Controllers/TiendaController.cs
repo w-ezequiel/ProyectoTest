@@ -207,7 +207,11 @@ namespace ProyectoTest.Controllers
                                                 Cantidad = dc.Cantidad
                                             }).ToList()
                       }).ToList();
-            return Json(new { lista = oLista }, JsonRequestBehavior.AllowGet);
+
+            var json = Json(new { lista = oLista }, JsonRequestBehavior.AllowGet);
+            json.MaxJsonLength = 500000000;
+            return json;
+           
         }
     }
 }

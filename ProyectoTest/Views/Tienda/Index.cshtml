@@ -59,11 +59,12 @@
                 <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
 
-                        <div class=" bg-light py-2">
-                            <div class="container px-2 px-lg-2 mt-5">
-                                <div id="catalogo-productos" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                        <div class=" bg-light py-2 ">
+                            <div class="container px-2 px-lg-2 ">
+                                <div id="catalogo-productos" class="row gx-4 gx-lg-4 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center ">
 
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -144,7 +145,7 @@
                         $.each(data.data, function (i, item) {
                             //catalogo-productos
                             $("<div>").addClass("col mb-5").append(
-                                $("<div>").addClass("card h-100").append(
+                                $("<div>").addClass("card").append(
                                     $("<img>").addClass("card-img-top").attr({ "src": "data:image/" + item.extension + ";base64," + item.base64 }),
                                     //Product details
                                     $("<div>").addClass("card-body p-4").append(

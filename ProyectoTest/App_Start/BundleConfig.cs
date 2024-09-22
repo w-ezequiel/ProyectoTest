@@ -20,12 +20,17 @@ namespace ProyectoTest
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new Bundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.bundle.min.js"
-                      ));
+                      "~/Scripts/bootstrap.bundle.min.js",
+                      "~/Scripts/Chart.min.js"));
+
+            //bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
+            //        "~/Scripts/bootstrap.js",
+            //        "~/Scripts/Chart.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.min.css",
-                      "~/Content/Site.css"));
+                      "~/Content/Site.css",
+                      "~/Content/Chart.min.css"));
 
 
 

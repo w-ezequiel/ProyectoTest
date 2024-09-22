@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using System.IO;
+using System.Collections;
 
 namespace ProyectoTest.Controllers
 {
@@ -21,6 +22,13 @@ namespace ProyectoTest.Controllers
         }
 
         public ActionResult Producto()
+        {
+            if (Session["Usuario"] == null)
+                return RedirectToAction("Index", "Login");
+
+            return View();
+        }
+        public ActionResult Compra()
         {
             if (Session["Usuario"] == null)
                 return RedirectToAction("Index", "Login");
@@ -57,8 +65,64 @@ namespace ProyectoTest.Controllers
                           extension = Path.GetExtension(o.RutaImagen).Replace(".", ""),
                           Activo = o.Activo
                       }).ToList();
-            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            var json = Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            json.MaxJsonLength = 500000000;
+            return json;
         }
+
+
+        //[HttpGet]
+        //public JsonResult ReporteVentas()
+        //{
+        //    DT_Reporte objDT_Reporte = new DT_Reporte();
+
+        //    List<ReporteVenta> objLista = objDT_Reporte.RetornarVentas();
+
+        //    return Json(objLista, JsonRequestBehavior.AllowGet);
+        //}
+
+        [HttpGet]
+        public JsonResult GraficoCompra()
+        {
+            List<graficaCompra> oLista = new List<graficaCompra>();
+
+            oLista = CompraLogica.Instancia.grafVentas();
+            //oLista = (from o in oLista
+            //          select new graficaCompra()
+            //          {
+            //              Fecha = o.Fecha,
+            //              Total = o.Total
+            //          }).ToList();
+            //var json = Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            //json.MaxJsonLength = 500000000;
+
+            //List<ReporteVenta> objLista = objDT_Reporte.RetornarVentas();
+
+            return Json(oLista, JsonRequestBehavior.AllowGet);
+            //return json;
+        }
+
+        [HttpGet]
+        public JsonResult ListarCompra()
+        {
+            List<listarCompra> oLista = new List<listarCompra>();
+
+            oLista = CompraLogica.Instancia.Listar();
+            oLista = (from o in oLista
+                      select new listarCompra()
+                      {
+                          IdCompra = o.IdCompra,
+                          TotalProducto = o.TotalProducto,
+                          Total = o.Total,
+                          FechaTexto = o.FechaTexto,
+                          usuario = o.usuario
+                      }).ToList();
+            var json = Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            json.MaxJsonLength = 500000000;
+            return json;
+        }
+
+
 
         [HttpPost]
         public JsonResult GuardarProducto(string objeto, HttpPostedFileBase imagenArchivo)
